@@ -55,7 +55,7 @@ public interface CustomerService {
      * @param pageable Pageable request.
      * @return All customers wrapped in page slice.
      */
-    Page<Customer> findAllPaged(Pageable pageable);
+    Page<Customer> findAll(Pageable pageable);
 
     /**
      * Find customers with specified active state with pageable request.
@@ -64,7 +64,7 @@ public interface CustomerService {
      * @param pageable Pageable request.
      * @return Customers wrapped in page slice, with the specified active state.
      */
-    Page<Customer> findAllPaged(boolean isActive, Pageable pageable);
+    Page<Customer> findAll(boolean isActive, Pageable pageable);
 
     /**
      * Find all customer with specified first name and last name.
@@ -99,7 +99,7 @@ public interface CustomerService {
      * @param pageable Pageable request.
      * @return Customers in paged slice and belong to the specified user.
      */
-    Page<Customer> findByUserPaged(User user, Pageable pageable);
+    Page<Customer> findByUser(User user, Pageable pageable);
 
     /**
      * Find customers with specified active state and belong to one user with pageable request.
@@ -108,16 +108,23 @@ public interface CustomerService {
      * @param pageable Pageable request.
      * @return Customers wrapped in page slice, with specified active state and belong to one user.
      */
-    Page<Customer> findByUserPaged(boolean isActive, User user, Pageable pageable);
+    Page<Customer> findByUser(boolean isActive, User user, Pageable pageable);
 
     /**
      * Find customers with given first name and last name and belong to the specified user.
      *
      * @param user User object.
-     * @param FirstName Customer's first name.
+     * @param firstName Customer's first name.
      * @param lastName Customer's last name.
      * @return List of customers with given first name and last name and belong to the specified user.
      */
-    List<Customer> findByUserAndFullName(User user, String FirstName, String lastName);
+    List<Customer> findByUserAndFullName(User user, String firstName, String lastName);
+
+    /**
+     * Find the customer by ID
+     * @param id Customer ID
+     * @return Customer with the specified ID
+     */
+    Customer findById(long id);
 
 }
