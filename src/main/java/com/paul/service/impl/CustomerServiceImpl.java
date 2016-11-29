@@ -4,6 +4,8 @@ import com.paul.domain.Customer;
 import com.paul.domain.User;
 import com.paul.service.def.CustomerService;
 import com.paul.service.repo.CustomerRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,9 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class CustomerServiceImpl implements CustomerService {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private CustomerRepo customerRepo;
 
@@ -27,11 +32,13 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void saveCustomer(Customer customer) {
         customerRepo.save(customer);
+
+        logger.info("Customer named {} created", customer.getFirstName());
     }
 
     @Transactional
     @Override
-    public void setCustomerActive(Customer customer, boolean isActive) {
+    public void setActiveState(Customer customer, boolean isActive) {
         customer.setActive(isActive);
         customerRepo.save(customer);
     }

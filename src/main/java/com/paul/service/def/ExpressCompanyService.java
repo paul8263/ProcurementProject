@@ -9,6 +9,8 @@ import java.util.List;
 
 /**
  * Created by paulzhang on 28/11/2016.
+ *
+ * Express Company DAO.
  */
 public interface ExpressCompanyService {
     void saveExpressCompany(User user, ExpressCompany expressCompany);

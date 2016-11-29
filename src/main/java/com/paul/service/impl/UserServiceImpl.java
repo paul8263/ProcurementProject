@@ -3,6 +3,8 @@ package com.paul.service.impl;
 import com.paul.domain.User;
 import com.paul.service.def.UserService;
 import com.paul.service.repo.UserRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +24,8 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private UserRepo userRepo;
@@ -46,6 +50,9 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(password));
             user.setActive(true);
             userRepo.save(user);
+
+            logger.info("User with email {} created", email);
+
 //            Todo user login
             return true;
 
@@ -75,7 +82,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean changePassword(String email, String oldPassword, String newPassword) {
         User user = findByEmail(email);
-        if (passwordEncoder.matches(user.getPassword(), oldPassword)) {
+        if (null == user) return false;
+        if (passwordEncoder.matches(oldPassword, user.getPassword())) {
             user.setPassword(passwordEncoder.encode(newPassword));
             userRepo.save(user);
             return true;

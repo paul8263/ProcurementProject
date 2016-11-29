@@ -26,7 +26,7 @@ public interface CustomerService {
      * @param customer Customer object.
      * @param isActive The active state.
      */
-    void setCustomerActive(Customer customer, boolean isActive);
+    void setActiveState(Customer customer, boolean isActive);
 
     /**
      * Remove customer from database.
