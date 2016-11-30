@@ -30,7 +30,7 @@ public class CustomerOrder implements Serializable {
     private boolean isActive;
 
     /** Store all customer order items */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customerOrder")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customerOrder", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CustomerOrderItem> customerOrderItemList = new ArrayList<>();
 
     /** Customer who owns this customer order */

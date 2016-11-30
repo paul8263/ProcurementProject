@@ -63,15 +63,15 @@ public class Customer implements Serializable {
     private boolean isActive;
 
     /** Store photo ID image paths for the customer */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PhotoIDInfo> photoIDInfoList = new ArrayList<>();
 
     /** Store all orders belong to this customer */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CustomerOrder> customerOrderList = new ArrayList<>();
 
     /** Store All express orders belong to this customer */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ExpressOrder> expressOrderList = new ArrayList<>();
 
     /** User this customer is linked to */

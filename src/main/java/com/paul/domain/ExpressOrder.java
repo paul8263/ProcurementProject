@@ -57,7 +57,7 @@ public class ExpressOrder implements Serializable {
     private Customer customer;
 
     /** All items in this express order */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "expressOrder")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "expressOrder", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ExpressOrderItem> expressOrderItemList = new ArrayList<>();
 
     @Override

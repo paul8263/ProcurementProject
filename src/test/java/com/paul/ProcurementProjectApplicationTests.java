@@ -410,7 +410,6 @@ public class ProcurementProjectApplicationTests {
     }
 
 
-    @Ignore
     @Transactional
     @Test
     public void deleteTest() {

@@ -39,7 +39,7 @@ public class ExpressCompany implements Serializable {
     /** Address for this express company */
     private String address;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "expressCompany")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "expressCompany", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ExpressPrice> expressPriceList;
 
     /** User who input this express company */

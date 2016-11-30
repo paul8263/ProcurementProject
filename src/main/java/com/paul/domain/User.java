@@ -40,15 +40,15 @@ public class User implements Serializable {
     private boolean isActive;
 
     /** All customers created by this user */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Customer> customerList = new ArrayList<>();
 
     /** All express company used by this user */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ExpressCompany> expressCompanyList = new ArrayList<>();
 
     /** All products selling by this user */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Product> productList = new ArrayList<>();
 
     @Override
