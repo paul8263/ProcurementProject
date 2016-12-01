@@ -14,6 +14,8 @@ import java.util.List;
 
 /**
  * Created by paulzhang on 1/12/2016.
+ *
+ * Express price service implementation.
  */
 @Service
 @Transactional(readOnly = true)
@@ -42,5 +44,10 @@ public class ExpressPriceServiceImpl implements ExpressPriceService {
     @Override
     public Page<ExpressPrice> findAll(ExpressCompany expressCompany, Pageable pageable) {
         return expressPriceRepo.findByExpressCompany(expressCompany, pageable);
+    }
+
+    @Override
+    public ExpressPrice findById(long id) {
+        return expressPriceRepo.findOne(id);
     }
 }

@@ -40,4 +40,11 @@ public interface ExpressPriceService {
      * @return Express companies belonging to the express company wrapped in a page slice.
      */
     Page<ExpressPrice> findAll(ExpressCompany expressCompany, Pageable pageable);
+
+    /**
+     * Find one express price by ID;
+     * @param id ID
+     * @return Express price with the given ID.
+     */
+    ExpressPrice findById(long id);
 }

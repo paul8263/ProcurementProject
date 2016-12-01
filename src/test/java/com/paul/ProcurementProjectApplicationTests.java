@@ -52,6 +52,12 @@ public class ProcurementProjectApplicationTests {
     @Autowired
     private ExpressPriceService expressPriceService;
 
+    @Autowired
+    private ExpressOrderService expressOrderService;
+
+    @Autowired
+    private ExpressOrderItemService expressOrderItemService;
+
 
     @Before
     public void prepareData() {
@@ -285,6 +291,51 @@ public class ProcurementProjectApplicationTests {
 
         expressCompany1.getExpressPriceList().add(expressPrice1);
         expressCompany1.getExpressPriceList().add(expressPrice2);
+
+//		------------------------------------
+//      Express order
+        ExpressOrder expressOrder1 = new ExpressOrder();
+        expressOrder1.setCustomer(customer1);
+        expressOrder1.setDelivered(false);
+        expressOrder1.setOrderNumber("123456");
+        expressOrder1.setInputDate(new Date());
+        expressOrder1.setDeliveredDate(new Date());
+        expressOrder1.setSendDate(new Date());
+        expressOrder1.setTotalCost(new BigDecimal("20.5"));
+        expressOrder1.setTotalWeight(new BigDecimal("4.0"));
+        expressOrderService.save(expressOrder1);
+
+        ExpressOrder expressOrder2 = new ExpressOrder();
+        expressOrder2.setCustomer(customer1);
+        expressOrder2.setDelivered(false);
+        expressOrder2.setOrderNumber("123456");
+        expressOrder2.setInputDate(new Date());
+        expressOrder2.setDeliveredDate(new Date());
+        expressOrder2.setSendDate(new Date());
+        expressOrder2.setTotalCost(new BigDecimal("20.5"));
+        expressOrder2.setTotalWeight(new BigDecimal("4.0"));
+        expressOrderService.save(expressOrder2);
+
+        customer1.getExpressOrderList().add(expressOrder1);
+        customer1.getExpressOrderList().add(expressOrder2);
+
+//		------------------------------------
+//      Express order item
+        ExpressOrderItem expressOrderItem1 = new ExpressOrderItem();
+        expressOrderItem1.setExpressOrder(expressOrder1);
+        expressOrderItem1.setProduct(product1);
+        expressOrderItem1.setQuantity(5);
+        expressOrderItemService.save(expressOrderItem1);
+
+        ExpressOrderItem expressOrderItem2 = new ExpressOrderItem();
+        expressOrderItem2.setExpressOrder(expressOrder1);
+        expressOrderItem2.setProduct(product2);
+        expressOrderItem2.setQuantity(5);
+        expressOrderItemService.save(expressOrderItem2);
+
+        expressOrder1.getExpressOrderItemList().add(expressOrderItem1);
+        expressOrder1.getExpressOrderItemList().add(expressOrderItem2);
+
     }
 
 
@@ -528,8 +579,65 @@ public class ProcurementProjectApplicationTests {
         Assert.assertEquals(expressPricePage.getTotalElements(), 2);
 
         ExpressPrice expressPrice = expressPriceService.findAll(expressCompany).get(0);
+        long id = expressPrice.getId();
+        Assert.assertEquals(expressPrice, expressPriceService.findById(id));
+
+        expressPrice = expressPriceService.findAll(expressCompany).get(0);
         expressPriceService.delete(expressPrice);
         Assert.assertEquals(expressPriceService.findAll(expressCompany).size(), 1);
+    }
+
+    @Transactional
+    @Test
+    public void expressOrderTest() {
+        Customer customer = customerService.findByFullName("Paul", "Zhang").get(0);
+        List<ExpressOrder> expressOrderList = customer.getExpressOrderList();
+        Assert.assertEquals(expressOrderList.size(), 2);
+
+        expressOrderList = expressOrderService.findAll(customer);
+        Assert.assertEquals(expressOrderList.size(), 2);
+
+        ExpressOrder expressOrder = expressOrderList.get(0);
+        expressOrderService.setDelivered(expressOrder, true);
+        Assert.assertEquals(expressOrderService.findAll(customer, true).size(), 1);
+
+        long id = expressOrder.getId();
+        Assert.assertEquals(expressOrder, expressOrderService.findById(id));
+
+        Page<ExpressOrder> expressOrderPage = expressOrderService.findAll(customer, new PageRequest(0, 2));
+        Assert.assertEquals(expressOrderPage.getTotalElements(), 2);
+        Assert.assertEquals(expressOrderPage.getTotalPages(), 1);
+
+        expressOrderPage = expressOrderService.findAll(customer, false, new PageRequest(0, 2));
+        Assert.assertEquals(expressOrderPage.getTotalElements(), 1);
+        Assert.assertEquals(expressOrderPage.getTotalPages(), 1);
+
+        expressOrderService.delete(expressOrder);
+        Assert.assertEquals(expressOrderService.findAll(customer).size(), 1);
+
+    }
+
+    @Transactional
+    @Test
+    public void expressOrderItemTest() {
+        Customer customer = customerService.findByFullName("Paul", "Zhang").get(0);
+        List<ExpressOrder> expressOrderList = customer.getExpressOrderList();
+        ExpressOrder expressOrder = expressOrderList.get(0);
+        List<ExpressOrderItem> expressOrderItemList = expressOrder.getExpressOrderItemList();
+        Assert.assertEquals(expressOrderItemList.size(), 2);
+
+        expressOrderItemList = expressOrderItemService.findAll(expressOrder);
+        Assert.assertEquals(expressOrderItemList.size(), 2);
+
+        ExpressOrderItem expressOrderItem = expressOrderItemList.get(0);
+        long id = expressOrderItem.getId();
+        Assert.assertEquals(expressOrderItem, expressOrderItemService.findById(id));
+
+        Page<ExpressOrderItem> expressOrderItemPage = expressOrderItemService.findAll(expressOrder, new PageRequest(0, 2));
+        Assert.assertEquals(expressOrderItemPage.getTotalElements(), 2);
+
+        expressOrderItemService.delete(expressOrderItem);
+        Assert.assertEquals(expressOrderItemService.findAll(expressOrder).size(), 1);
     }
 
 }
