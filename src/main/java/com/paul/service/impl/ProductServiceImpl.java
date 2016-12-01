@@ -23,11 +23,13 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepo productRepo;
 
+    @Transactional
     @Override
     public void save(Product product) {
         productRepo.save(product);
     }
 
+    @Transactional
     @Override
     public void delete(Product product) {
         productRepo.delete(product);

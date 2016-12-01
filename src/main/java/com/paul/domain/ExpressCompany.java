@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class ExpressCompany implements Serializable {
     private String address;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "expressCompany", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<ExpressPrice> expressPriceList;
+    private List<ExpressPrice> expressPriceList = new ArrayList<>();
 
     /** User who input this express company */
     @ManyToOne

@@ -4,6 +4,7 @@ import com.paul.domain.*;
 import com.paul.service.def.*;
 import com.paul.service.repo.CustomerOrderItemRepo;
 import com.paul.service.repo.CustomerOrderRepo;
+import com.paul.service.repo.ExpressCompanyRepo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -44,6 +45,12 @@ public class ProcurementProjectApplicationTests {
 
     @Autowired
     private CustomerOrderItemService customerOrderItemService;
+
+    @Autowired
+    private ExpressCompanyService expressCompanyService;
+
+    @Autowired
+    private ExpressPriceService expressPriceService;
 
 
     @Before
@@ -148,8 +155,8 @@ public class ProcurementProjectApplicationTests {
         product1.setProductName("MacBook Pro");
         product1.setComment("Comment for product 1");
         product1.setSpecs("13 inch");
-        product1.setMarketPrice(new BigDecimal(1699.50));
-        product1.setRetailPrice(new BigDecimal(1899.99));
+        product1.setMarketPrice(new BigDecimal("1699.50"));
+        product1.setRetailPrice(new BigDecimal("1899.99"));
         product1.setLastModifyDate(new Date());
         product1.setUser(user1);
         productService.save(product1);
@@ -159,8 +166,8 @@ public class ProcurementProjectApplicationTests {
         product2.setProductName("MacBook Air");
         product2.setComment("Comment for product 2");
         product2.setSpecs("13 inch");
-        product2.setMarketPrice(new BigDecimal(1399.50));
-        product2.setRetailPrice(new BigDecimal(1599.99));
+        product2.setMarketPrice(new BigDecimal("1399.50"));
+        product2.setRetailPrice(new BigDecimal("1599.99"));
         product2.setLastModifyDate(new Date());
         product2.setUser(user1);
         productService.save(product2);
@@ -173,8 +180,8 @@ public class ProcurementProjectApplicationTests {
         product3.setProductName("Surface Pro 3");
         product3.setComment("Comment for product 3");
         product3.setSpecs("12 inch");
-        product3.setMarketPrice(new BigDecimal(1599.50));
-        product3.setRetailPrice(new BigDecimal(1699.99));
+        product3.setMarketPrice(new BigDecimal("1599.50"));
+        product3.setRetailPrice(new BigDecimal("1699.99"));
         product3.setLastModifyDate(new Date());
         product3.setUser(user2);
         productService.save(product3);
@@ -184,11 +191,22 @@ public class ProcurementProjectApplicationTests {
         product4.setProductName("Surface Pro 4");
         product4.setComment("Comment for product 4");
         product4.setSpecs("12 inch");
-        product4.setMarketPrice(new BigDecimal(2099.95));
-        product4.setRetailPrice(new BigDecimal(2489.50));
+        product4.setMarketPrice(new BigDecimal("2099.95"));
+        product4.setRetailPrice(new BigDecimal("2489.50"));
         product4.setLastModifyDate(new Date());
         product4.setUser(user2);
         productService.save(product4);
+
+        Product product5 = new Product();
+        product5.setCreateDate(new Date());
+        product5.setProductName("iPad");
+        product5.setComment("Comment for product 5");
+        product5.setSpecs("12 inch");
+        product5.setMarketPrice(new BigDecimal("399.95"));
+        product5.setRetailPrice(new BigDecimal("499.50"));
+        product5.setLastModifyDate(new Date());
+        product5.setUser(user2);
+        productService.save(product5);
 
         user2.getProductList().add(product3);
         user2.getProductList().add(product4);
@@ -218,6 +236,55 @@ public class ProcurementProjectApplicationTests {
 
         customerOrder1.getCustomerOrderItemList().add(customerOrderItem1);
         customerOrder1.getCustomerOrderItemList().add(customerOrderItem2);
+
+//		------------------------------------
+//      Express Company
+        ExpressCompany expressCompany1 = new ExpressCompany();
+        expressCompany1.setActive(true);
+        expressCompany1.setUser(user1);
+        expressCompany1.setCreateDate(new Date());
+        expressCompany1.setName("NEXUS");
+        expressCompany1.setAddress("XXX Street");
+        expressCompanyService.save(expressCompany1);
+
+        ExpressCompany expressCompany2 = new ExpressCompany();
+        expressCompany2.setActive(true);
+        expressCompany2.setUser(user1);
+        expressCompany2.setCreateDate(new Date());
+        expressCompany2.setName("ABC");
+        expressCompany2.setAddress("XXX Avenue");
+        expressCompanyService.save(expressCompany2);
+
+        ExpressCompany expressCompany3 = new ExpressCompany();
+        expressCompany3.setActive(true);
+        expressCompany3.setUser(user2);
+        expressCompany3.setCreateDate(new Date());
+        expressCompany3.setName("CBA");
+        expressCompany3.setAddress("XXX Path");
+        expressCompanyService.save(expressCompany3);
+
+        user1.getExpressCompanyList().add(expressCompany1);
+        user1.getExpressCompanyList().add(expressCompany2);
+        user2.getExpressCompanyList().add(expressCompany3);
+
+//		------------------------------------
+//      Express Price
+        ExpressPrice expressPrice1 = new ExpressPrice();
+        expressPrice1.setInputDate(new Date());
+        expressPrice1.setPrice(new BigDecimal("6.50"));
+        expressPrice1.setProductType("Milk");
+        expressPrice1.setExpressCompany(expressCompany1);
+        expressPriceService.save(expressPrice1);
+
+        ExpressPrice expressPrice2 = new ExpressPrice();
+        expressPrice2.setInputDate(new Date());
+        expressPrice2.setPrice(new BigDecimal("6.50"));
+        expressPrice2.setProductType("Milk");
+        expressPrice2.setExpressCompany(expressCompany1);
+        expressPriceService.save(expressPrice2);
+
+        expressCompany1.getExpressPriceList().add(expressPrice1);
+        expressCompany1.getExpressPriceList().add(expressPrice2);
     }
 
 
@@ -311,6 +378,15 @@ public class ProcurementProjectApplicationTests {
         userService.deleteUser(user);
         user = userService.findByEmail("peter@123.com");
         Assert.assertNull(user);
+
+    }
+
+    @Transactional
+    @Test
+    public void deleteUserTest() {
+        User user = userService.findByEmail("paul@123.com");
+        userService.deleteUser(user);
+        Assert.assertEquals(customerService.findAll().size(), 2);
     }
 
     @Transactional
@@ -345,22 +421,23 @@ public class ProcurementProjectApplicationTests {
         Assert.assertEquals(productList.size(), 2);
 
         productList = productService.findAll();
-        Assert.assertEquals(productList.size(), 4);
+        Assert.assertEquals(productList.size(), 5);
 
         productList = productService.findAll(user);
         Assert.assertEquals(productList.size(), 2);
 
         Page<Product> productPage = productService.findAll(new PageRequest(0, 2));
-        Assert.assertEquals(productPage.getTotalElements(), 4);
-        Assert.assertEquals(productPage.getTotalPages(), 2);
+        Assert.assertEquals(productPage.getTotalElements(), 5);
+        Assert.assertEquals(productPage.getTotalPages(), 3);
 
         productPage = productService.findAll(user, new PageRequest(0, 2));
         Assert.assertEquals(productPage.getTotalElements(), 2);
         Assert.assertEquals(productPage.getTotalPages(), 1);
 
-//		Product product = productService.findAll().get(0);
-//		productService.delete(product);
-//		Assert.assertEquals(productService.findAll().size(), 3);
+        Assert.assertEquals(productService.findAll().get(4).getMarketPrice(), new BigDecimal("399.95"));
+        Product product = productService.findAll().get(4);
+		productService.delete(product);
+		Assert.assertEquals(productService.findAll().size(), 4);
     }
 
     @Transactional
@@ -386,10 +463,10 @@ public class ProcurementProjectApplicationTests {
         Assert.assertEquals(customerOrderList.size(), 0);
         customerOrderService.setActiveState(customerOrder, true);
 
-//		Assert.assertEquals(customerOrderService.findAllByCustomer(customer).size(), 1);
-//		customerOrder = customerOrderService.findAllByCustomer(customer).get(0);
-//		customerOrderService.deleteCustomerOrder(customerOrder);
-//		Assert.assertEquals(customerOrderService.findAllByCustomer(customer).size(), 0);
+		Assert.assertEquals(customerOrderService.findAllByCustomer(customer).size(), 1);
+		customerOrder = customerOrderService.findAllByCustomer(customer).get(0);
+		customerOrderService.deleteCustomerOrder(customerOrder);
+		Assert.assertEquals(customerOrderService.findAllByCustomer(customer).size(), 0);
     }
 
     @Transactional
@@ -409,14 +486,50 @@ public class ProcurementProjectApplicationTests {
         Assert.assertEquals(customerOrderItemService.findAll(customerOrder).size(), 1);
     }
 
+    @Transactional
+    @Test
+    public void expressCompanyTest() {
+        User user = userService.findByEmail("paul@123.com");
+        List<ExpressCompany> expressCompanyList = expressCompanyService.findAll(user);
+        Assert.assertEquals(expressCompanyList.size(), 2);
+
+        long expressCompanyId = expressCompanyList.get(0).getId();
+        ExpressCompany expressCompany = expressCompanyService.findById(expressCompanyId);
+        expressCompany.setActive(false);
+        expressCompanyService.save(expressCompany);
+
+        expressCompanyList = expressCompanyService.findAll(false, user);
+        Assert.assertEquals(expressCompanyList.size(), 1);
+
+        Page<ExpressCompany> expressCompanyPage = expressCompanyService.findAll(user, new PageRequest(0, 2));
+        Assert.assertEquals(expressCompanyPage.getTotalElements(), 2);
+
+        expressCompanyPage = expressCompanyService.findAll(false, user, new PageRequest(0, 2));
+        Assert.assertEquals(expressCompanyPage.getTotalElements(), 1);
+
+        expressCompany = expressCompanyService.findById(expressCompanyId);
+        expressCompanyService.delete(expressCompany);
+        Assert.assertEquals(expressCompanyService.findAll(user).size(), 1);
+    }
 
     @Transactional
     @Test
-    public void deleteTest() {
+    public void expressPriceTest() {
         User user = userService.findByEmail("paul@123.com");
-        userService.deleteUser(user);
-        Assert.assertEquals(customerService.findAll().size(), 2);
-    }
+        ExpressCompany expressCompany = expressCompanyService.findAll(user).get(0);
 
+        List<ExpressPrice> expressPriceList = expressCompany.getExpressPriceList();
+        Assert.assertEquals(expressPriceList.size(), 2);
+
+        expressPriceList = expressPriceService.findAll(expressCompany);
+        Assert.assertEquals(expressPriceList.size(), 2);
+
+        Page<ExpressPrice> expressPricePage = expressPriceService.findAll(expressCompany, new PageRequest(0, 2));
+        Assert.assertEquals(expressPricePage.getTotalElements(), 2);
+
+        ExpressPrice expressPrice = expressPriceService.findAll(expressCompany).get(0);
+        expressPriceService.delete(expressPrice);
+        Assert.assertEquals(expressPriceService.findAll(expressCompany).size(), 1);
+    }
 
 }
