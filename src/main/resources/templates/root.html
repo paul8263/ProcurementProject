@@ -5,10 +5,20 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1"/>
-    <title>Kangaroo Shopping</title>
+    <title>Root</title>
 </head>
 <body>
-<p>Index</p>
+<div class="page-wrapper">
+    <div class="header">
+        <div class="banner"></div>
+        <div class="navbar"></div>
+    </div>
+    <div class="page-content">
+        <div layout:fragment="page-content" th:remove="tag"></div>
+    </div>
+    <div class="footer"></div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script></script>
 </body>

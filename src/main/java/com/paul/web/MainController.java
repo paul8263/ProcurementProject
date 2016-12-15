@@ -13,6 +13,21 @@ public class MainController {
 
     @GetMapping
     public String showIndex() {
-        return "root";
+        return "index";
+    }
+
+    @GetMapping(value = "about")
+    public String showAbout() {
+        return "about";
+    }
+
+    @GetMapping(value = "signup")
+    public String showSignUp() {
+        return "signUp";
+    }
+
+    @GetMapping(value = "login")
+    public String showLogin() {
+        return "login";
     }
 }
