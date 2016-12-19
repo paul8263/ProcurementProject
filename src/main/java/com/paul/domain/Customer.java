@@ -1,9 +1,9 @@
 package com.paul.domain;
 
+import com.paul.domain.abstractEntity.CreateDateEntity;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,11 +14,7 @@ import java.util.List;
  * Customer stores information who orders product.
  */
 @Entity
-public class Customer implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class Customer extends CreateDateEntity {
 
     /** Customer's first name */
     @NotEmpty
@@ -51,10 +47,6 @@ public class Customer implements Serializable {
     /** ID for the customer */
     private String idNumber;
 
-    /** Date the customer was created */
-    @Temporal(TemporalType.DATE)
-    private Date createDate;
-
     /** Extra information for this customer */
     @Lob
     private String comment;
@@ -85,14 +77,6 @@ public class Customer implements Serializable {
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 '}';
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -167,14 +151,6 @@ public class Customer implements Serializable {
         this.idNumber = idNumber;
     }
 
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
     public String getComment() {
         return comment;
     }
@@ -227,14 +203,14 @@ public class Customer implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         Customer customer = (Customer) o;
 
-        if (id != customer.id) return false;
         if (isActive != customer.isActive) return false;
-        if (!firstName.equals(customer.firstName)) return false;
-        if (!lastName.equals(customer.lastName)) return false;
-        if (!country.equals(customer.country)) return false;
+        if (firstName != null ? !firstName.equals(customer.firstName) : customer.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(customer.lastName) : customer.lastName != null) return false;
+        if (country != null ? !country.equals(customer.country) : customer.country != null) return false;
         if (province != null ? !province.equals(customer.province) : customer.province != null) return false;
         if (city != null ? !city.equals(customer.city) : customer.city != null) return false;
         if (address != null ? !address.equals(customer.address) : customer.address != null) return false;
@@ -242,7 +218,6 @@ public class Customer implements Serializable {
         if (phoneNumber != null ? !phoneNumber.equals(customer.phoneNumber) : customer.phoneNumber != null)
             return false;
         if (idNumber != null ? !idNumber.equals(customer.idNumber) : customer.idNumber != null) return false;
-        if (createDate != null ? !createDate.equals(customer.createDate) : customer.createDate != null) return false;
         if (comment != null ? !comment.equals(customer.comment) : customer.comment != null) return false;
         if (photoIDInfoList != null ? !photoIDInfoList.equals(customer.photoIDInfoList) : customer.photoIDInfoList != null)
             return false;
@@ -256,17 +231,16 @@ public class Customer implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + firstName.hashCode();
-        result = 31 * result + lastName.hashCode();
-        result = 31 * result + country.hashCode();
+        int result = super.hashCode();
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
         result = 31 * result + (province != null ? province.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (zipCode != null ? zipCode.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
         result = 31 * result + (idNumber != null ? idNumber.hashCode() : 0);
-        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
         result = 31 * result + (isActive ? 1 : 0);
         result = 31 * result + (photoIDInfoList != null ? photoIDInfoList.hashCode() : 0);

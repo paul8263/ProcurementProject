@@ -1,5 +1,6 @@
 package com.paul.domain;
 
+import com.paul.domain.abstractEntity.CreateDateEntity;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -15,11 +16,7 @@ import java.util.List;
  * Express order, store all info during shipment
  */
 @Entity
-public class ExpressOrder implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class ExpressOrder extends CreateDateEntity {
 
     /** Order Number*/
     @NotEmpty
@@ -28,10 +25,6 @@ public class ExpressOrder implements Serializable {
     /** Specify the date when the parcel was mailed */
     @Temporal(TemporalType.DATE)
     private Date sendDate;
-
-    /** Specify the date when this express order was entered in this system */
-    @Temporal(TemporalType.DATE)
-    private Date inputDate;
 
     /** Specify the date when the parcel was delivered */
     @Temporal(TemporalType.DATE)
@@ -68,14 +61,6 @@ public class ExpressOrder implements Serializable {
                 '}';
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getOrderNumber() {
         return orderNumber;
     }
@@ -90,14 +75,6 @@ public class ExpressOrder implements Serializable {
 
     public void setSendDate(Date sendDate) {
         this.sendDate = sendDate;
-    }
-
-    public Date getInputDate() {
-        return inputDate;
-    }
-
-    public void setInputDate(Date inputDate) {
-        this.inputDate = inputDate;
     }
 
     public Date getDeliveredDate() {
@@ -160,14 +137,13 @@ public class ExpressOrder implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         ExpressOrder that = (ExpressOrder) o;
 
-        if (id != that.id) return false;
         if (isDelivered != that.isDelivered) return false;
         if (!orderNumber.equals(that.orderNumber)) return false;
         if (sendDate != null ? !sendDate.equals(that.sendDate) : that.sendDate != null) return false;
-        if (inputDate != null ? !inputDate.equals(that.inputDate) : that.inputDate != null) return false;
         if (deliveredDate != null ? !deliveredDate.equals(that.deliveredDate) : that.deliveredDate != null)
             return false;
         if (totalWeight != null ? !totalWeight.equals(that.totalWeight) : that.totalWeight != null) return false;
@@ -180,10 +156,9 @@ public class ExpressOrder implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = super.hashCode();
         result = 31 * result + orderNumber.hashCode();
         result = 31 * result + (sendDate != null ? sendDate.hashCode() : 0);
-        result = 31 * result + (inputDate != null ? inputDate.hashCode() : 0);
         result = 31 * result + (deliveredDate != null ? deliveredDate.hashCode() : 0);
         result = 31 * result + (isDelivered ? 1 : 0);
         result = 31 * result + (totalWeight != null ? totalWeight.hashCode() : 0);

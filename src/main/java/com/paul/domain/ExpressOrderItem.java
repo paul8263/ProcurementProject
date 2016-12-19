@@ -1,5 +1,7 @@
 package com.paul.domain;
 
+import com.paul.domain.abstractEntity.VersionedEntity;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -9,11 +11,7 @@ import java.io.Serializable;
  * Order Item for each express order
  */
 @Entity
-public class ExpressOrderItem implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class ExpressOrderItem extends VersionedEntity {
 
     /** Quantity for this order item */
     private int quantity;
@@ -34,14 +32,6 @@ public class ExpressOrderItem implements Serializable {
                 "quantity=" + quantity +
                 ", product=" + product +
                 '}';
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public int getQuantity() {
@@ -72,10 +62,10 @@ public class ExpressOrderItem implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         ExpressOrderItem that = (ExpressOrderItem) o;
 
-        if (id != that.id) return false;
         if (quantity != that.quantity) return false;
         if (product != null ? !product.equals(that.product) : that.product != null) return false;
         return expressOrder != null ? expressOrder.equals(that.expressOrder) : that.expressOrder == null;
@@ -84,7 +74,7 @@ public class ExpressOrderItem implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = super.hashCode();
         result = 31 * result + quantity;
         result = 31 * result + (product != null ? product.hashCode() : 0);
         result = 31 * result + (expressOrder != null ? expressOrder.hashCode() : 0);

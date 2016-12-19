@@ -1,5 +1,7 @@
 package com.paul.domain;
 
+import com.paul.domain.abstractEntity.CreateDateEntity;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -10,11 +12,7 @@ import java.util.Date;
  * Photo ID info is for storing the paths of photo ID images
  */
 @Entity
-public class PhotoIDInfo implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class PhotoIDInfo extends CreateDateEntity {
 
     /** The customer who owns this photo ID */
     @ManyToOne
@@ -28,23 +26,11 @@ public class PhotoIDInfo implements Serializable {
     @Lob
     private String comment;
 
-    /** Upload Date for this image */
-    @Temporal(TemporalType.DATE)
-    private Date createDate;
-
     @Override
     public String toString() {
         return "PhotoIDInfo{" +
                 "customer=" + customer +
                 '}';
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public Customer getCustomer() {
@@ -71,36 +57,26 @@ public class PhotoIDInfo implements Serializable {
         this.comment = comment;
     }
 
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         PhotoIDInfo that = (PhotoIDInfo) o;
 
-        if (id != that.id) return false;
         if (customer != null ? !customer.equals(that.customer) : that.customer != null) return false;
         if (path != null ? !path.equals(that.path) : that.path != null) return false;
-        if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
-        return createDate != null ? createDate.equals(that.createDate) : that.createDate == null;
+        return comment != null ? comment.equals(that.comment) : that.comment == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = super.hashCode();
         result = 31 * result + (customer != null ? customer.hashCode() : 0);
         result = 31 * result + (path != null ? path.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
-        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         return result;
     }
 }

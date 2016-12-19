@@ -276,14 +276,14 @@ public class ProcurementProjectApplicationTests {
 //		------------------------------------
 //      Express Price
         ExpressPrice expressPrice1 = new ExpressPrice();
-        expressPrice1.setInputDate(new Date());
+        expressPrice1.setCreateDate(new Date());
         expressPrice1.setPrice(new BigDecimal("6.50"));
         expressPrice1.setProductType("Milk");
         expressPrice1.setExpressCompany(expressCompany1);
         expressPriceService.save(expressPrice1);
 
         ExpressPrice expressPrice2 = new ExpressPrice();
-        expressPrice2.setInputDate(new Date());
+        expressPrice2.setCreateDate(new Date());
         expressPrice2.setPrice(new BigDecimal("6.50"));
         expressPrice2.setProductType("Milk");
         expressPrice2.setExpressCompany(expressCompany1);
@@ -298,7 +298,7 @@ public class ProcurementProjectApplicationTests {
         expressOrder1.setCustomer(customer1);
         expressOrder1.setDelivered(false);
         expressOrder1.setOrderNumber("123456");
-        expressOrder1.setInputDate(new Date());
+        expressOrder1.setCreateDate(new Date());
         expressOrder1.setDeliveredDate(new Date());
         expressOrder1.setSendDate(new Date());
         expressOrder1.setTotalCost(new BigDecimal("20.5"));
@@ -309,7 +309,7 @@ public class ProcurementProjectApplicationTests {
         expressOrder2.setCustomer(customer1);
         expressOrder2.setDelivered(false);
         expressOrder2.setOrderNumber("123456");
-        expressOrder2.setInputDate(new Date());
+        expressOrder2.setCreateDate(new Date());
         expressOrder2.setDeliveredDate(new Date());
         expressOrder2.setSendDate(new Date());
         expressOrder2.setTotalCost(new BigDecimal("20.5"));

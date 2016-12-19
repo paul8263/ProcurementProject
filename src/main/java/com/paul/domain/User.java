@@ -1,12 +1,11 @@
 package com.paul.domain;
 
+import com.paul.domain.abstractEntity.CreateDateEntity;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,11 +14,7 @@ import java.util.List;
  * Root Object that used for authentication
  */
 @Entity
-public class User implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class User extends CreateDateEntity {
 
     /** In this system, email works as the username, used in authentication */
     @Column(nullable = false, unique = true)
@@ -31,10 +26,6 @@ public class User implements Serializable {
     @NotEmpty
     @Column(nullable = false)
     private String password;
-
-    /** Date when the user was registered */
-    @Temporal(TemporalType.DATE)
-    private Date createDate;
 
     /** If this user were deleted or banned or not activated, this value should be false */
     private boolean isActive;
@@ -58,14 +49,6 @@ public class User implements Serializable {
                 '}';
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -80,14 +63,6 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
     }
 
     public boolean isActive() {
@@ -126,14 +101,13 @@ public class User implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         User user = (User) o;
 
-        if (id != user.id) return false;
         if (isActive != user.isActive) return false;
         if (!email.equals(user.email)) return false;
         if (!password.equals(user.password)) return false;
-        if (createDate != null ? !createDate.equals(user.createDate) : user.createDate != null) return false;
         if (customerList != null ? !customerList.equals(user.customerList) : user.customerList != null) return false;
         if (expressCompanyList != null ? !expressCompanyList.equals(user.expressCompanyList) : user.expressCompanyList != null)
             return false;
@@ -143,10 +117,9 @@ public class User implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = super.hashCode();
         result = 31 * result + email.hashCode();
         result = 31 * result + password.hashCode();
-        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (isActive ? 1 : 0);
         result = 31 * result + (customerList != null ? customerList.hashCode() : 0);
         result = 31 * result + (expressCompanyList != null ? expressCompanyList.hashCode() : 0);

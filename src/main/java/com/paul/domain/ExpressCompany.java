@@ -1,5 +1,6 @@
 package com.paul.domain;
 
+import com.paul.domain.abstractEntity.CreateDateEntity;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -14,11 +15,7 @@ import java.util.List;
  * Express Company we cooperating with
  */
 @Entity
-public class ExpressCompany implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class ExpressCompany extends CreateDateEntity {
 
     /** Express Company Name*/
     @NotEmpty
@@ -26,10 +23,6 @@ public class ExpressCompany implements Serializable {
 
     /** URL for querying the shipment status */
     private String shipmentStatusQueryLink;
-
-    /** Date when the express company was entered this system */
-    @Temporal(TemporalType.DATE)
-    private Date createDate;
 
     /** If false, this express company would be temporarily hidden */
     private boolean isActive;
@@ -55,14 +48,6 @@ public class ExpressCompany implements Serializable {
                 '}';
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -77,14 +62,6 @@ public class ExpressCompany implements Serializable {
 
     public void setShipmentStatusQueryLink(String shipmentStatusQueryLink) {
         this.shipmentStatusQueryLink = shipmentStatusQueryLink;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
     }
 
     public boolean isActive() {
@@ -131,15 +108,14 @@ public class ExpressCompany implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         ExpressCompany that = (ExpressCompany) o;
 
-        if (id != that.id) return false;
         if (isActive != that.isActive) return false;
         if (!name.equals(that.name)) return false;
         if (shipmentStatusQueryLink != null ? !shipmentStatusQueryLink.equals(that.shipmentStatusQueryLink) : that.shipmentStatusQueryLink != null)
             return false;
-        if (createDate != null ? !createDate.equals(that.createDate) : that.createDate != null) return false;
         if (contactNumber != null ? !contactNumber.equals(that.contactNumber) : that.contactNumber != null)
             return false;
         if (address != null ? !address.equals(that.address) : that.address != null) return false;
@@ -151,10 +127,9 @@ public class ExpressCompany implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = super.hashCode();
         result = 31 * result + name.hashCode();
         result = 31 * result + (shipmentStatusQueryLink != null ? shipmentStatusQueryLink.hashCode() : 0);
-        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (isActive ? 1 : 0);
         result = 31 * result + (contactNumber != null ? contactNumber.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);

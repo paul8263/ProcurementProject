@@ -1,5 +1,6 @@
 package com.paul.domain;
 
+import com.paul.domain.abstractEntity.CreateDateEntity;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -13,11 +14,7 @@ import java.util.Date;
  * Product of what we are available to sale
  */
 @Entity
-public class Product implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class Product extends CreateDateEntity {
 
     /** Product name */
     @NotEmpty
@@ -38,10 +35,6 @@ public class Product implements Serializable {
     @Lob
     private String comment;
 
-    /** Date when this product was entered */
-    @Temporal(TemporalType.DATE)
-    private Date createDate;
-
     /** Last date of this product was modified */
     @Temporal(TemporalType.DATE)
     private Date lastModifyDate;
@@ -57,14 +50,6 @@ public class Product implements Serializable {
                 "productName='" + productName + '\'' +
                 ", specs='" + specs + '\'' +
                 '}';
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getProductName() {
@@ -107,14 +92,6 @@ public class Product implements Serializable {
         this.comment = comment;
     }
 
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
     public Date getLastModifyDate() {
         return lastModifyDate;
     }
@@ -135,16 +112,15 @@ public class Product implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         Product product = (Product) o;
 
-        if (id != product.id) return false;
         if (!productName.equals(product.productName)) return false;
         if (specs != null ? !specs.equals(product.specs) : product.specs != null) return false;
         if (marketPrice != null ? !marketPrice.equals(product.marketPrice) : product.marketPrice != null) return false;
         if (retailPrice != null ? !retailPrice.equals(product.retailPrice) : product.retailPrice != null) return false;
         if (comment != null ? !comment.equals(product.comment) : product.comment != null) return false;
-        if (createDate != null ? !createDate.equals(product.createDate) : product.createDate != null) return false;
         if (lastModifyDate != null ? !lastModifyDate.equals(product.lastModifyDate) : product.lastModifyDate != null)
             return false;
         return user != null ? user.equals(product.user) : product.user == null;
@@ -153,13 +129,12 @@ public class Product implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = super.hashCode();
         result = 31 * result + productName.hashCode();
         result = 31 * result + (specs != null ? specs.hashCode() : 0);
         result = 31 * result + (marketPrice != null ? marketPrice.hashCode() : 0);
         result = 31 * result + (retailPrice != null ? retailPrice.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
-        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (lastModifyDate != null ? lastModifyDate.hashCode() : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
         return result;
