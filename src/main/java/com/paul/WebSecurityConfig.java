@@ -40,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
                 .failureUrl("/login?error=true")
-                .defaultSuccessUrl("/s/dashboard", true)
+                .defaultSuccessUrl("/dashboard/", true)
         .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 }
