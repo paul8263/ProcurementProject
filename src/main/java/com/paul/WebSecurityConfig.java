@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 /**
  * Created by paulzhang on 15/12/2016.
@@ -31,6 +33,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/**").permitAll();
+        http.authorizeRequests()
+                .antMatchers("/**")
+                .permitAll()
+        .and().formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .failureUrl("/login?error=true")
+                .defaultSuccessUrl("/s/dashboard", true)
+        .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 }

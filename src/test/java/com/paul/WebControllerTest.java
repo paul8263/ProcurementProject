@@ -34,6 +34,6 @@ public class WebControllerTest {
 
     @Test
     public void mainControllerTest() throws Exception {
-        mvc.perform(get("/")).andExpect(status().isOk()).andExpect(view().name("root")).andDo(print());
+        mvc.perform(get("/")).andExpect(status().isOk()).andExpect(view().name("index")).andDo(print());
     }
 }
