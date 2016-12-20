@@ -30,9 +30,6 @@ public class UserController {
     @Autowired
     private UserHelper userHelper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @InitBinder
     public void bind(WebDataBinder binder) {
         binder.addValidators(passwordChangeFormBeanValidator);

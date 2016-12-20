@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,24 +40,16 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
     @Override
     public boolean login(String email, String password) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                password,
-                userDetails.getAuthorities()
-        );
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password);
 
-        authenticationManager.authenticate(token);
-        if (token.isAuthenticated()) {
-            SecurityContextHolder.getContext().setAuthentication(token);
+        Authentication authentication = authenticationManager.authenticate(token);
+        if (authentication.isAuthenticated()) {
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             return true;
         }
         return false;
