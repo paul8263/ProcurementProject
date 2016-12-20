@@ -8,6 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -33,10 +38,27 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
     @Override
     public boolean login(String email, String password) {
-//        Todo implementation
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                password,
+                userDetails.getAuthorities()
+        );
+
+        authenticationManager.authenticate(token);
+        if (token.isAuthenticated()) {
+            SecurityContextHolder.getContext().setAuthentication(token);
+            return true;
+        }
         return false;
     }
 
@@ -53,9 +75,7 @@ public class UserServiceImpl implements UserService {
 
             logger.info("User with email {} created", email);
 
-//            Todo user login
             return true;
-
         }
         return false;
     }

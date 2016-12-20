@@ -39,6 +39,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and().formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .failureUrl("/login?error=true")
                 .defaultSuccessUrl("/dashboard/", true)
         .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
