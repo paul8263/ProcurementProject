@@ -83,7 +83,7 @@ public class ProductController {
         return "redirect:/product/" + productId;
     }
 
-    @GetMapping
+    @GetMapping(value = "/new")
     public String showCreateNewProduct() {
         return "productCreateModify";
     }
