@@ -83,6 +83,8 @@ public class CustomerController {
         originalCustomer.setIdNumber(customer.getIdNumber());
         originalCustomer.setComment(customer.getComment());
 
+        customerService.saveCustomer(originalCustomer);
+
         return "redirect:/customer/" + customerId;
     }
 }
